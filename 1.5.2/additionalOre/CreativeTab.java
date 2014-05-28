@@ -11,17 +11,19 @@ public class CreativeTab extends CreativeTabs {
 
 	String type;
 
-	public CreativeTab(String type) {
+	public CreativeTab(String type)
+    {
 		super(type);
 		this.type = type;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-    public ItemStack getIconItemStack() {
-		if(this.type.matches("\u9271\u77F3\u8FFD\u52A0"))
+    public ItemStack getIconItemStack()
+    {
+		if(this.type.matches("AdditonalOre : Block"))
 			return new ItemStack(Block.cobblestone);
-		else if(this.type.matches("\u30C4\u30FC\u30EB\u8FFD\u52A0"))
+		else if(this.type.matches("AdditonalOre : Tools"))
 			return new ItemStack(Item.pickaxeWood);
 		else
 			return new ItemStack(Item.redstone);

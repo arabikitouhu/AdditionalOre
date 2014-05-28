@@ -1,69 +1,113 @@
 package mods.additionalOre.items;
 
-import java.util.List;
-
-import mods.additionalOre.AdditionalOre;
-import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
-import net.minecraft.util.MathHelper;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mods.japanAPI.JapanAPI;
+import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Icon;
+import net.minecraftforge.oredict.OreDictionary;
 
-public class ItemIngot extends Item {
+import java.util.List;
 
-	public static final String[] uniNames = {
-		"Copper", "Tin", "Uranium", "Aluminium",
-		"Bronze", "Steel", "Titanium", "Lead",
-		"Nickel", "Silver", "Chrome", "Tungsten",
-		"Iridium" };
-	public static final String[] jpNames = {
-		"\u9285\u30A4\u30F3\u30B4\u30C3\u30C8", "\u932B\u30A4\u30F3\u30B4\u30C3\u30C8", "\u30A6\u30E9\u30F3\u30A4\u30F3\u30B4\u30C3\u30C8", "\u30A2\u30EB\u30DF\u30CB\u30A6\u30E0\u30A4\u30F3\u30B4\u30C3\u30C8",
-		"\u9752\u9285\u30A4\u30F3\u30B4\u30C3\u30C8", "\u92FC\u30A4\u30F3\u30B4\u30C3\u30C8", "\u30C1\u30BF\u30CB\u30A6\u30E0\u30A4\u30F3\u30B4\u30C3\u30C8", "\u925B\u306E\u30A4\u30F3\u30B4\u30C3\u30C8",
-		"\u30CB\u30C3\u30B1\u30EB\u30A4\u30F3\u30B4\u30C3\u30C8", "\u9280\u30A4\u30F3\u30B4\u30C3\u30C8", "\u30AF\u30ED\u30E0\u30A4\u30F3\u30B4\u30C3\u30C8", "\u30BF\u30F3\u30B0\u30B9\u30C6\u30F3\u30A4\u30F3\u30B4\u30C3\u30C8",
-		"\u30A4\u30EA\u30B8\u30A6\u30E0\u30A4\u30F3\u30B4\u30C3\u30C8"};
+public class ItemIngot extends AO_Item
+{
+
+	public ItemIngot(int id)
+    {
+		super(id);
+        register();
+	}
+
+    private void register()
+    {
+        GameRegistry.registerItem(this,"Item Ingot");
+
+        for(Ingot M : Ingot.VAILD_ARGS)
+        {
+            LanguageRegistry.addName(new ItemStack(this,1,M.meta),M.unlocalizedName + " Ingot");
+            LanguageRegistry.instance().addNameForObject(new ItemStack(this,1,M.meta),"ja_JP",M.jpName + "のインゴット");
+            OreDictionary.registerOre("ingot" + M.unlocalizedName,new ItemStack(this,1,M.meta));
+            JapanAPI.EVENT_entityItemPickupEventHook.addCoercedList("ingot" + M.meta, new ItemStack(this, 1, M.meta));
+        }
+    }
 
 	@SideOnly(Side.CLIENT)
-	private Icon[] icons;
+	@Override
+	public Icon getIconFromDamage(int meta)
+    {
+		return Ingot.VAILD_ARGS[meta].texture;
+	}
 
-	public ItemIngot(int id) {
-		super(id - 256);
-		setHasSubtypes(true);
-		setMaxDamage(0);
-		setCreativeTab(AdditionalOre.TABS_ore);
+
+	@Override
+	public String getUnlocalizedName(ItemStack itemStack)
+    {
+		return "additionalOre:" + Ingot.VAILD_ARGS[itemStack.getItemDamage()] + " Ingot";
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public Icon getIconFromDamage(int meta) {
-		return icons[MathHelper.clamp_int(meta, 0, uniNames.length)];
+	public void registerIcons(IconRegister iconRegister)
+    {
+        for (Ingot I :Ingot.VAILD_ARGS)
+        {
+            I.loadTexture(iconRegister);
+        }
+
 	}
 
-
-	@Override
-	public String getUnlocalizedName(ItemStack itemStack) {
-		int meta = MathHelper.clamp_int(itemStack.getItemDamage(), 0, uniNames.length);
-		return "additionalOre:" + uniNames[meta] + " Ingot";
-	}
-
+    @Override
 	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IconRegister iconRegister) {
-		icons = new Icon[uniNames.length];
-		for (int i = 0; i < uniNames.length; i++) {
-			icons[i] = iconRegister.registerIcon("additionalOre:" + uniNames[i] + " Ingot");
+	public void getSubItems(int id, CreativeTabs creativeTabs, List list)
+    {
+		for (Ingot I :Ingot.VAILD_ARGS)
+        {
+			list.add(new ItemStack(id, 1, I.meta));
 		}
-
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void getSubItems(int id, CreativeTabs creativeTabs, List list) {
-		for (int i = 0; i < uniNames.length; i++) {
-			list.add(new ItemStack(id, 1, i));
-		}
-	}
+    public enum Ingot
+    {
+        COPPER("Copper","銅"),
+        Tin("Tin","錫"),
+        URANIUM("Uranium","ウラニウム"),
+        ALUMINIUM("Aluminium","アルミニウム"),
+        BRONZE("Bronze","青銅"),
+        STEEL("Steel","鋼鉄"),
+        TITANIUM("Titanium","チタニウム"),
+        LEAD("Lead","鉛"),
+        NICKEL("Nickel","ニッケル"),
+        WHITE_GOLD("WhiteGold","ホワイトゴールド"),
+        PLATINUM("Platinum","白金"),
+        SILVER("Silver","銀"),
+        ELECTRUM("Electrum","琥珀金"),
+        CHROME("Chrome","クロム"),
+        TUNGSTEN("Tungsten","タングステン"),
+        TUNGSTEN_STEEL("TungstenSteel","タングステン鋼"),
+        IRIDIUM("Iridium","イリヂウム"),
+        ;
 
+        public String unlocalizedName;
+        public String jpName;
+        public int meta = ordinal();
+        public static final Ingot[] VAILD_ARGS = values();
+
+        @SideOnly(Side.CLIENT)
+        public Icon texture;
+
+        private Ingot(String unlocalizedName,String jpName)
+        {
+            this.unlocalizedName = unlocalizedName;
+            this.jpName= jpName;
+        }
+
+        public void loadTexture(IconRegister iconRegister)
+        {
+            texture = iconRegister.registerIcon("additionalOre:" + unlocalizedName + " Ingot");
+        }
+    }
 }

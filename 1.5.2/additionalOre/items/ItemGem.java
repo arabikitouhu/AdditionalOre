@@ -1,61 +1,96 @@
 package mods.additionalOre.items;
 
-import java.util.List;
-
-import mods.additionalOre.AdditionalOre;
-import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
-import net.minecraft.util.MathHelper;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mods.japanAPI.JapanAPI;
+import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Icon;
+import net.minecraftforge.oredict.OreDictionary;
 
-public class ItemGem extends Item {
+import java.util.List;
 
-	public static final String[] uniNames = { "Ruby", "Sapphire" };
-	public static final String[] jpNames = { "\u30EB\u30D3\u30FC", "\u30B5\u30D5\u30A1\u30A4\u30A2" };
+public class ItemGem extends AO_Item
+{
 
-	@SideOnly(Side.CLIENT)
-	private Icon[] icons;
-
-	public ItemGem(int id) {
-		super(id - 256);
-		setHasSubtypes(true);
-		setMaxDamage(0);
-		setCreativeTab(AdditionalOre.TABS_ore);
+	public ItemGem(int id)
+    {
+		super(id);
+        register();
 	}
 
+    private void register()
+    {
+        GameRegistry.registerItem(this, "Item Gem");
+        for(Gems G : Gems.VAILD_ARGS)
+        {
+                LanguageRegistry.addName(new ItemStack(this, 1, G.meta), G.unlocalizedName);
+                LanguageRegistry.instance().addNameForObject(new ItemStack(this, 1, G.meta), "ja_JP", G.jpName);
+                OreDictionary.registerOre("gem" + G.unlocalizedName, new ItemStack(this, 1, G.meta));
+                JapanAPI.EVENT_entityItemPickupEventHook.addCoercedList("gem" + G.meta, new ItemStack(this, 1, G.meta));
+        }
+    }
+
+    @Override
 	@SideOnly(Side.CLIENT)
-	@Override
-	public Icon getIconFromDamage(int meta) {
-		return icons[MathHelper.clamp_int(meta, 0, uniNames.length)];
+	public Icon getIconFromDamage(int meta)
+    {
+		return Gems.VAILD_ARGS[meta].texture;
 	}
 
 
 	@Override
-	public String getUnlocalizedName(ItemStack itemStack) {
-		int meta = MathHelper.clamp_int(itemStack.getItemDamage(), 0, uniNames.length);
-		return "additionalOre:" + uniNames[meta] + " Gem";
+	public String getUnlocalizedName(ItemStack itemStack)
+    {
+		return "additionalOre:" + Gems.VAILD_ARGS[itemStack.getItemDamage()] + " Gem";
 	}
 
+    @Override
 	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IconRegister iconRegister) {
-		icons = new Icon[uniNames.length];
-		for (int i = 0; i < uniNames.length; i++) {
-			icons[i] = iconRegister.registerIcon("additionalOre:" + uniNames[i] + " Gem");
+	public void registerIcons(IconRegister iconRegister)
+    {
+		for(Gems G :Gems.VAILD_ARGS)
+        {
+            G.loadTexture(iconRegister);
+        }
+	}
+
+    @Override
+	@SideOnly(Side.CLIENT)
+	public void getSubItems(int id, CreativeTabs creativeTabs, List list)
+    {
+		for (Gems G:Gems.VAILD_ARGS)
+        {
+			list.add(new ItemStack(id, 1, G.ordinal()));
 		}
-
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void getSubItems(int id, CreativeTabs creativeTabs, List list) {
-		for (int i = 0; i < uniNames.length; i++) {
-			list.add(new ItemStack(id, 1, i));
-		}
-	}
+    private enum Gems
+    {
+        RUBY("Ruby","紅玉"),
+        SAPPHIRE("Sapphire","碧玉"),
 
+        ;
+        public String unlocalizedName;
+        public String jpName;
+        public int meta = ordinal();
+        public static Gems[] VAILD_ARGS = values();
+
+        @SideOnly(Side.CLIENT)
+        public Icon texture;
+
+        private Gems(String unlocalizedName,String jpName)
+        {
+            this.unlocalizedName = unlocalizedName;
+            this.jpName = jpName;
+        }
+
+        public void loadTexture(IconRegister iconRegister)
+        {
+            texture = iconRegister.registerIcon("additionalOre:" + unlocalizedName + " Gem");
+        }
+    }
 }

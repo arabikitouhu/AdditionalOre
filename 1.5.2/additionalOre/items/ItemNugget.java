@@ -1,71 +1,114 @@
 package mods.additionalOre.items;
 
-import java.util.List;
-
-import mods.additionalOre.AdditionalOre;
-import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
-import net.minecraft.util.MathHelper;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mods.japanAPI.JapanAPI;
+import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Icon;
+import net.minecraftforge.oredict.OreDictionary;
 
-public class ItemNugget extends Item {
+import java.util.List;
 
-	public static final String[] uniNames = {
-		"Iron", "Lapis", "Emerald", "Diamond",
-		"Quartz", "Copper", "Tin", "Uranium",
-		"Aluminium", "Bronze", "Steel", "Titanium",
-		"Lead", "Nickel", "Silver", "Chrome",
-		"Tungsten", "Iridium" };
-	public static final String[] jpNames = {
-		"\u9244\u306E\u304B\u3051\u3089", "\u30E9\u30D4\u30B9\u30E9\u30BA\u30EA\u306E\u304B\u3051\u3089", "\u30A8\u30E1\u30E9\u30EB\u30C9\u306E\u304B\u3051\u3089", "\u30C0\u30A4\u30E4\u30E2\u30F3\u30C9\u306E\u304B\u3051\u3089",
-		"\u77F3\u82F1\u306E\u304B\u3051\u3089", "\u9285\u306E\u304B\u3051\u3089", "\u932B\u306E\u304B\u3051\u3089", "\u30A6\u30E9\u30CB\u30A6\u30E0\u306E\u304B\u3051\u3089",
-		"\u30A2\u30EB\u30DF\u30CB\u30A6\u30E0\u306E\u304B\u3051\u3089", "\u9752\u9285\u306E\u304B\u3051\u3089", "\u92FC\u306E\u304B\u3051\u3089", "\u30C1\u30BF\u30CB\u30A6\u30E0\u306E\u304B\u3051\u3089",
-		"\u925B\u306E\u304B\u3051\u3089", "\u30CB\u30C3\u30B1\u30EB\u306E\u304B\u3051\u3089", "\u9280\u306E\u304B\u3051\u3089", "\u30AF\u30ED\u30E0\u306E\u304B\u3051\u3089",
-		"\u30BF\u30F3\u30B0\u30B9\u30C6\u30F3\u306E\u304B\u3051\u3089", "\u30A4\u30EA\u30B8\u30A6\u30E0\u306E\u304B\u3051\u3089"};
+public class ItemNugget extends AO_Item
+{
 
-	@SideOnly(Side.CLIENT)
-	private Icon[] icons;
-
-	public ItemNugget(int id) {
-		super(id - 256);
-		setHasSubtypes(true);
-		setMaxDamage(0);
-		setCreativeTab(AdditionalOre.TABS_ore);
+	public ItemNugget(int id)
+    {
+		super(id);
+        register();
 	}
 
+    private void register()
+    {
+        GameRegistry.registerItem(this,"Item Nugget");
+        for(Nugget M : Nugget.VAILD_ARGS)
+        {
+            LanguageRegistry.addName(new ItemStack(this,1,M.meta),M.unlocalizedName + " Nugget");
+            LanguageRegistry.instance().addNameForObject(new ItemStack(this,1,M.meta),"ja_JP",M.jpName + "のかけら");
+            OreDictionary.registerOre("nugget" + M.unlocalizedName,new ItemStack(this,1,M.meta));
+            JapanAPI.EVENT_entityItemPickupEventHook.addCoercedList("nugget" + M.meta, new ItemStack(this, 1, M.meta));
+        }
+    }
+
+    @Override
 	@SideOnly(Side.CLIENT)
-	@Override
-	public Icon getIconFromDamage(int meta) {
-		return icons[MathHelper.clamp_int(meta, 0, uniNames.length)];
+	public Icon getIconFromDamage(int meta)
+    {
+		return Nugget.VAILD_ARGS[meta].texture;
 	}
 
 
 	@Override
-	public String getUnlocalizedName(ItemStack itemStack) {
-		int meta = MathHelper.clamp_int(itemStack.getItemDamage(), 0, uniNames.length);
-		return "additionalOre:" + uniNames[meta] + " Nugget";
+	public String getUnlocalizedName(ItemStack itemStack)
+    {
+		return "additionalOre:" + Nugget.VAILD_ARGS[itemStack.getItemDamage()] + " Nugget";
 	}
 
+    @Override
 	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IconRegister iconRegister) {
-		icons = new Icon[uniNames.length];
-		for (int i = 0; i < uniNames.length; i++) {
-			icons[i] = iconRegister.registerIcon("additionalOre:" + uniNames[i] + " Nugget");
+	public void registerIcons(IconRegister iconRegister)
+    {
+
+		for (Nugget N : Nugget.VAILD_ARGS)
+        {
+			N.loadTexture(iconRegister);
 		}
 
 	}
 
+    @Override
 	@SideOnly(Side.CLIENT)
-	@Override
-	public void getSubItems(int id, CreativeTabs creativeTabs, List list) {
-		for (int i = 0; i < uniNames.length; i++) {
-			list.add(new ItemStack(id, 1, i));
+	public void getSubItems(int id, CreativeTabs creativeTabs, List list)
+    {
+		for (Nugget N : Nugget.VAILD_ARGS)
+        {
+			list.add(new ItemStack(id, 1, N.meta));
 		}
 	}
 
+    private enum Nugget
+    {
+        IRON("Iron","鉄"),
+        LAPIS("Lapis","ラピス"),
+        EMERALD("Emerald","翡翠"),
+        DIAMOMD("Diamond","金剛"),
+        QUARTZ("Quartz","石英"),
+        COPPER("Copper","銅"),
+        TIN("Tin","錫"),
+        URANIUM("Uranium","ウラニウム"),
+        ALUMINIUM("Aluminium","アルミニウム"),
+        BRONZE("Bronze","青銅"),
+        STEEL("Steel","鋼鉄"),
+        TITANIUM("Titanium","チタニウム"),
+        LEAD("Lead","鉛"),
+        NICKEL("Nickel","ニッケル"),
+        SILVER("Silver","銀"),
+        CHROME("Chrome","クロム"),
+        TUNGSTEN("Tungsten","タングステン"),
+        IRIDIUM("Iridium","イリヂウム"),
+        ;
+
+        public String unlocalizedName;
+        public String jpName;
+        public static final Nugget[] VAILD_ARGS = values();
+        public int meta = ordinal();
+
+        @SideOnly(Side.CLIENT)
+        public Icon texture;
+
+        private Nugget(String unlocalizedName,String jpName)
+        {
+            this.unlocalizedName = unlocalizedName;
+            this.jpName = jpName;
+        }
+
+        public void loadTexture(IconRegister iconRegister)
+        {
+            texture = iconRegister.registerIcon("additionalOre:" + unlocalizedName + " Nugget");
+        }
+    }
 }

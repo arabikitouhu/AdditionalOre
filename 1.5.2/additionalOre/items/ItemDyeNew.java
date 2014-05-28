@@ -1,16 +1,8 @@
 package mods.additionalOre.items;
 
-import java.util.List;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockCloth;
-import net.minecraft.block.BlockCocoa;
-import net.minecraft.block.BlockCrops;
-import net.minecraft.block.BlockDirectional;
-import net.minecraft.block.BlockLog;
-import net.minecraft.block.BlockMushroom;
-import net.minecraft.block.BlockSapling;
-import net.minecraft.block.BlockStem;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.*;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
@@ -27,15 +19,17 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Event.Result;
 import net.minecraftforge.event.entity.player.BonemealEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemDyeNew extends Item {
+import java.util.List;
+
+public class ItemDyeNew extends Item
+{
 
 	@SideOnly(Side.CLIENT)
 	private Icon[] icons;
 
-	public ItemDyeNew() {
+	public ItemDyeNew()
+    {
 		super(95);
 		setHasSubtypes(true);
 		setMaxDamage(0);
@@ -44,7 +38,8 @@ public class ItemDyeNew extends Item {
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public Icon getIconFromDamage(int par1) {
+	public Icon getIconFromDamage(int par1)
+    {
 		int j = MathHelper.clamp_int(par1, 0, 15);
 		return this.icons[j];
 	}
@@ -134,7 +129,8 @@ public class ItemDyeNew extends Item {
 		return applyBonemeal(par0ItemStack, par1World, par2, par3, par4, FakePlayerFactory.getMinecraft(par1World));
 	}
 
-	public static boolean applyBonemeal(ItemStack par0ItemStack, World par1World, int par2, int par3, int par4, EntityPlayer player) {
+	public static boolean applyBonemeal(ItemStack par0ItemStack, World par1World, int par2, int par3, int par4, EntityPlayer player)
+    {
 		int l = par1World.getBlockId(par2, par3, par4);
 
 		BonemealEvent event = new BonemealEvent(player, par1World, l, par2, par3, par4);
@@ -254,54 +250,68 @@ public class ItemDyeNew extends Item {
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World,
-			int par4, int par5, int par6, int par7, float par8, float par9, float par10) {
-		if (!par2EntityPlayer.canPlayerEdit(par4, par5, par6, par7, par1ItemStack)) {
+	public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world,
+			int x, int y, int z, int facing, float par8, float par9, float par10)
+    {
+		if (!player.canPlayerEdit(x, y, z, facing, itemStack))
+        {
 			return false;
 		} else {
-			if (par1ItemStack.getItemDamage() == 15) {
-				if (applyBonemeal(par1ItemStack, par3World, par4, par5, par6, par2EntityPlayer)) {
-					if (!par3World.isRemote) {
-						par3World.playAuxSFX(2005, par4, par5, par6, 0);
+			if (itemStack.getItemDamage() == 15)
+            {
+				if (applyBonemeal(itemStack, world, x, y, z, player))
+                {
+					if (!world.isRemote)
+                    {
+						world.playAuxSFX(2005, x, y, z, 0);
 					}
 
 					return true;
 				}
-			} else if (par1ItemStack.getItemDamage() == 3) {
-				int i1 = par3World.getBlockId(par4, par5, par6);
-				int j1 = par3World.getBlockMetadata(par4, par5, par6);
+			} else if (itemStack.getItemDamage() == 3)
+            {
+				int i1 = world.getBlockId(x, y, z);
+				int j1 = world.getBlockMetadata(x, y, z);
 
-				if (i1 == Block.wood.blockID && BlockLog.limitToValidMetadata(j1) == 3) {
-					if (par7 == 0) {
+				if (i1 == Block.wood.blockID && BlockLog.limitToValidMetadata(j1) == 3)
+                {
+					if (facing == 0)
+                    {
 						return false;
 					}
 
-					if (par7 == 1) {
+					if (facing == 1)
+                    {
 						return false;
 					}
 
-					if (par7 == 2) {
-						--par6;
+					if (facing == 2)
+                    {
+						--z;
 					}
 
-					if (par7 == 3) {
-						++par6;
+					if (facing == 3)
+                    {
+						++z;
 					}
 
-					if (par7 == 4) {
-						--par4;
+					if (facing == 4)
+                    {
+						--x;
 					}
 
-					if (par7 == 5) {
-						++par4;
+					if (facing == 5)
+                    {
+						++x;
 					}
 
-					if (par3World.isAirBlock(par4, par5, par6)) {
-						int k1 = Block.blocksList[Block.cocoaPlant.blockID].onBlockPlaced(par3World, par4, par5, par6, par7, par8, par9, par10, 0);
-						par3World.setBlock(par4, par5, par6, Block.cocoaPlant.blockID, k1, 2);
+					if (world.isAirBlock(x, y, z))
+                    {
+						int k1 = Block.blocksList[Block.cocoaPlant.blockID].onBlockPlaced(world, x, y, z, facing, par8, par9, par10, 0);
+						world.setBlock(x, y, z, Block.cocoaPlant.blockID, k1, 2);
 
-						if (!par2EntityPlayer.capabilities.isCreativeMode) {
-							--par1ItemStack.stackSize;
+						if (!player.capabilities.isCreativeMode) {
+							--itemStack.stackSize;
 						}
 					}
 

@@ -22,8 +22,11 @@ public class ConfigurationManager
     public static int ID_nuggets = 12503;
     public static int ID_gems = 12504;
     public static int ID_pickaxes[] = new int[9];
-    public static int ID_Hammer[] = new int[9];
+    public static int ID_Hammer[] = new int[11];
     public static int ID_Sickel[] = new int[12];
+    public static int ID_Axe[] = new int[9];
+    public static int ID_Shovel[] = new int[9];
+    public static int ID_Paxel[] = new int[12];
 
     public static boolean GenCopper;
     public static boolean GenTin;
@@ -33,6 +36,10 @@ public class ConfigurationManager
     public static boolean GenQuartz;
     public static boolean GenUranium;
     public static boolean GenBauxite;
+    public static boolean GenRuby;
+    public static boolean GenSapphire;
+    public static boolean GenGreenSapphire;
+    public static boolean GenCrackStone;
 
 
     //溶剤かまどを使った鋼鉄の精錬
@@ -78,6 +85,11 @@ public class ConfigurationManager
         return config.get("BLOCK",key,BlockID++).getInt();
     }
 
+    public static boolean getGEN(String key, boolean value)
+    {
+        return config.get("ORE GEN",key,value).getBoolean(value);
+    }
+
     public static void save()
     {
         config.save();
@@ -117,6 +129,33 @@ public class ConfigurationManager
         ID_Sickel[0] = getItem("Wooden Sickel");
         ID_Sickel[1] = getItem("Stone Sickel");
         ID_Sickel[2] = getItem("Iron Sickel");
+
+        ID_Shovel[0] = getItem("Copper Shovel");
+        ID_Shovel[1] = getItem("Bronze Shovel");
+        ID_Shovel[2] = getItem("Steel Shovel");
+
+        ID_Axe[0] = getItem("Cooper Axe");
+        ID_Axe[1] = getItem("Bronze Axe");
+        ID_Axe[2] = getItem("Steel Axe");
+
+        ID_Paxel[0] = getItem("Wood Paxel");
+        ID_Paxel[1] = getItem("Stone Paxel");
+        ID_Paxel[2] = getItem("Copper Paxel");
+        ID_Paxel[3] = getItem("Iron Paxel");
+        ID_Paxel[4] = getItem("Bronze Paxel");
+        ID_Paxel[5] = getItem("Steel Paxel");
+
+        GenCopper = getGEN("can Generation CopperOre?",true);
+        GenTin = getGEN("can Generation Tin Ore?",true);
+        GenCrackStone = getGEN("can Generation Quartz Ore?",true);
+        GenBauxite = getGEN("can Generation Bauxite Ore?",true);
+        GenSilver = getGEN("can Generation Silver Ore?",true);
+        GenNickel = getGEN("can Generation Nickel Ore?",true);
+        GenLead = getGEN("can Generation Lead Ore?",true);
+        GenUranium = getGEN("can Generation Uranium Ore?",true);
+
+
+
 
 
         save();

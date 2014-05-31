@@ -22,6 +22,16 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 public class ModRecipe
 {
+    public static void craftingInitilization()
+    {
+        pickaxeRecipe();
+        axeRecipe();
+        shovelPrecipe();
+        paxelRecipe();
+        sickelRecipe();
+        hammerRecipe();
+    }
+
     public static void initRecipe()
     {
         System.out.println("--- AdditonalOre initRecipe START ---");
@@ -61,7 +71,7 @@ public class ModRecipe
         System.out.println("----  AdditionalOre initRecipe  END   ----");
     }
 
-    public static void PickaxeRecipe()
+    public static void pickaxeRecipe()
     {
         //銅のつるはし
         ItemStack resipeItem = new ItemStack(AdditionalOre.ITEM_pickaxes[0]);
@@ -147,28 +157,99 @@ public class ModRecipe
                 'Y', Item.stick));
     }
 
-    public static void HammerRecipe()
+    public static void axeRecipe()
+    {
+        GameRegistry.addRecipe(new ShapedOreRecipe(
+                new ItemStack(AdditionalOre.ITEM_axe[0]),
+                "CC","CX"," X",
+                'C',"ingotCopper",
+                'X',Item.stick
+        ));
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(
+                new ItemStack(AdditionalOre.ITEM_axe[1]),
+                "CC","CX"," X",
+                'C',"ingotBronze",
+                'X',Item.stick
+        ));
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(
+                new ItemStack(AdditionalOre.ITEM_axe[2]),
+                "CC","CX"," X",
+                'C',"ingotSteel",
+                'X',Item.stick
+        ));
+    }
+
+    public static void shovelPrecipe()
+    {
+        GameRegistry.addRecipe(new ShapedOreRecipe(
+                new ItemStack(AdditionalOre.ITEM_shovel[0]),
+                "C","X","X",
+                'C',"ingotCopper",
+                'X',Item.stick
+        ));
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(
+                new ItemStack(AdditionalOre.ITEM_shovel[1]),
+                "C","X","X",
+                'C',"ingotBronze",
+                'X',Item.stick
+        ));
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(
+                new ItemStack(AdditionalOre.ITEM_shovel[2]),
+                "C","X","X",
+                'C',"ingotSteel",
+                'X',Item.stick
+        ));
+    }
+
+    private static void paxelRecipe()
+    {
+        GameRegistry.addRecipe(new ItemStack(AdditionalOre.ITEM_paxel[5]),
+                "APS"," Y "," Y ",
+                'A',AdditionalOre.ITEM_axe[2],
+                'P',AdditionalOre.ITEM_pickaxes[2],
+                'S',AdditionalOre.ITEM_shovel[2],
+                'Y',Item.stick
+                );
+    }
+
+    public static void hammerRecipe()
     {
         //木のハンマー
-        ItemStack resipeItem = new ItemStack(AdditionalOre.ITEM_hammer[0]);
-        GameRegistry.addRecipe(new ShapedOreRecipe(
-                resipeItem.copy(),
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdditionalOre.ITEM_hammer[0]),
                 "XXX", "XXX", " Y ",
                 'X', "logWood",
                 'Y', Item.stick));
-
+        //石ハンマー
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdditionalOre.ITEM_hammer[1]),
+                "XXX", "XXX", " Y ",
+                'X', Block.stone,
+                'Y', Item.stick));
     }
 
+    public static void sickelRecipe()
+    {
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(AdditionalOre.ITEM_sickel[0]),
+                " X ", "  X", "YX ",
+                'X', "plankWood",
+                'Y', Item.stick));
+
+
+
+    }
 
     public static void dustRecipe()
     {
 
         for(ItemMass.Mass mass :ItemMass.Mass.values())
         {
-            if(OreDictionaryUtil.getOreDic("dust" + mass.unlocalizedName) != null)
+            if(OreDictionaryUtil.getOreDicItemStack("dust" + mass.unlocalizedName) != null)
             {
                 GameRegistry.addRecipe(new ShapedOreRecipe(
-                        OreDictionaryUtil.getOreDic("dust" + mass.unlocalizedName),
+                        OreDictionaryUtil.getOreDicItemStack("dust" + mass.unlocalizedName),
                         "H","O",
                         'H',"craftingToolHardHammer",
                         'O',"mass" + mass.unlocalizedName
@@ -178,10 +259,10 @@ public class ModRecipe
 
         for(ItemIngot.Ingot ingot : ItemIngot.Ingot.VAILD_ARGS)
         {
-            if(OreDictionaryUtil.getOreDic("dust" + ingot.unlocalizedName) != null)
+            if(OreDictionaryUtil.getOreDicItemStack("dust" + ingot.unlocalizedName) != null)
             {
                 GameRegistry.addRecipe(new ShapedOreRecipe(
-                        OreDictionaryUtil.getOreDic("dust" + ingot.unlocalizedName),
+                        OreDictionaryUtil.getOreDicItemStack("dust" + ingot.unlocalizedName),
                         "H","O",
                         'H',"craftingToolHardHammer",
                         'O',"ingot" + ingot.unlocalizedName
@@ -190,7 +271,13 @@ public class ModRecipe
         }
 
         GameRegistry.addRecipe(new ShapedOreRecipe(
-                OreDictionaryUtil.getOreDic("dustIron"),
+                new ItemStack(AdditionalOre.ITEM_dusts,1, ItemDust.Dusts.COAL.meta),
+                "H","O",
+                'H',"craftingToolHardHammer",
+                'O',new ItemStack(Item.coal,1,32767)));
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(
+                OreDictionaryUtil.getOreDicItemStack("dustIron"),
                 "H","O",
                 'H',"craftingToolHardHammer",
                 'O',"ingotIron"
@@ -198,19 +285,19 @@ public class ModRecipe
 
         //青銅の粉
         GameRegistry.addRecipe(new ShapelessOreRecipe(
-                OreDictionaryUtil.getOreDic("dustBronze", 4),
+                OreDictionaryUtil.getOreDicItemStack("dustBronze", 4),
                 "dustTin", "dustCopper","dustCopper","dustCopper"));
 
-            //フェルニッケル
+        //フェルニッケル
         GameRegistry.addRecipe(new ShapelessOreRecipe(
-                OreDictionaryUtil.getOreDic("dustInvar",3),
+                OreDictionaryUtil.getOreDicItemStack("dustInvar", 3),
                 "dustIron","dustIron","dustIron","dustNickel"
                 ));
 
 
         //琥珀金
         GameRegistry.addRecipe(new ShapelessOreRecipe(
-                OreDictionaryUtil.getOreDic("dustElectrum",4),
+                OreDictionaryUtil.getOreDicItemStack("dustElectrum", 4),
                 "dustGold", "dustSilver"));
 
         //ホワイトゴールド
@@ -220,8 +307,8 @@ public class ModRecipe
 
         //鋼の粉
         GameRegistry.addRecipe(new ShapelessOreRecipe(
-                OreDictionaryUtil.getOreDic("dustSteel"),
-                "dustIron", "dustCoal"));
+                OreDictionaryUtil.getOreDicItemStack("dustSteel"),
+                "dustIron", "dustCoal","dustCoal"));
     }
 
     public static void smeltingRecipe()
@@ -242,69 +329,69 @@ public class ModRecipe
         FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.GOLD.ordinal(), new ItemStack(Item.ingotGold), 0.7F);	//金の粉→金インゴット
 
         //銅インゴット
-        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_masses, ItemMass.Mass.COPPER.ordinal(), OreDictionaryUtil.getOreDic("ingotCopper"), 0.2F);//銅の塊→銅インゴット
-        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.COPPER.ordinal(), OreDictionaryUtil.getOreDic("ingotCopper"), 0.2F);	//銅の粉→銅インゴット
+        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_masses, ItemMass.Mass.COPPER.ordinal(), OreDictionaryUtil.getOreDicItemStack("ingotCopper"), 0.2F);//銅の塊→銅インゴット
+        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.COPPER.ordinal(), OreDictionaryUtil.getOreDicItemStack("ingotCopper"), 0.2F);	//銅の粉→銅インゴット
 
         //錫インゴット
-        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_masses, ItemMass.Mass.TIN.ordinal(), OreDictionaryUtil.getOreDic("ingotTin"), 0.2F);//錫の塊→錫インゴット
-        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.TIN.ordinal(), OreDictionaryUtil.getOreDic("ingotTin"), 0.2F);	//錫の粉→錫インゴット
+        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_masses, ItemMass.Mass.TIN.ordinal(), OreDictionaryUtil.getOreDicItemStack("ingotTin"), 0.2F);//錫の塊→錫インゴット
+        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.TIN.ordinal(), OreDictionaryUtil.getOreDicItemStack("ingotTin"), 0.2F);	//錫の粉→錫インゴット
 
         //ウラニウムインゴット
         //ウラニウムの塊→ウラニウムインゴット
-        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_masses, ItemMass.Mass.URANIUM.ordinal(), OreDictionaryUtil.getOreDic("ingotUranium"), 1F);
+        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_masses, ItemMass.Mass.URANIUM.ordinal(), OreDictionaryUtil.getOreDicItemStack("ingotUranium"), 1F);
         //ウラニウムの粉→ウラニウムインゴット
-        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.URANIUM.ordinal(), OreDictionaryUtil.getOreDic("ingotUranium"), 1F);
+        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.URANIUM.ordinal(), OreDictionaryUtil.getOreDicItemStack("ingotUranium"), 1F);
 
         //アルミニウムインゴット
-        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.ALUMINUM.ordinal(), OreDictionaryUtil.getOreDic("ingotAluminium"), 1F);	//アルミニウムの粉→アルミニウムインゴット
+        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.ALUMINUM.ordinal(), OreDictionaryUtil.getOreDicItemStack("ingotAluminium"), 1F);	//アルミニウムの粉→アルミニウムインゴット
 
         //青銅インゴット
-        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.BRONZE.ordinal(), OreDictionaryUtil.getOreDic("ingotBronze"), 1F);	//青銅の粉→青銅インゴット
+        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.BRONZE.ordinal(), OreDictionaryUtil.getOreDicItemStack("ingotBronze"), 1F);	//青銅の粉→青銅インゴット
 
         //鋼インゴット
-        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.STEEL.ordinal(), OreDictionaryUtil.getOreDic("ingotSteel"), 1F);	//鋼の粉→鋼インゴット
+        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.STEEL.ordinal(), OreDictionaryUtil.getOreDicItemStack("ingotSteel"), 1F);	//鋼の粉→鋼インゴット
 
         //チタニウムインゴット
-        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_masses, ItemMass.Mass.TITANIUM.ordinal(), OreDictionaryUtil.getOreDic("ingotTitanium"), 1F);	//チタニウムの塊→チタニウムインゴット
-        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.TITANIUM.ordinal(), OreDictionaryUtil.getOreDic("ingotTitanium"), 1F);	//チタニウムの粉→チタニウムインゴット
+        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_masses, ItemMass.Mass.TITANIUM.ordinal(), OreDictionaryUtil.getOreDicItemStack("ingotTitanium"), 1F);	//チタニウムの塊→チタニウムインゴット
+        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.TITANIUM.ordinal(), OreDictionaryUtil.getOreDicItemStack("ingotTitanium"), 1F);	//チタニウムの粉→チタニウムインゴット
 
         //鉛インゴット
-        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_masses, ItemMass.Mass.LEAD.ordinal(), OreDictionaryUtil.getOreDic("ingotLead"), 1F);	//鉛の塊→鉛インゴット
-        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.LEAD.ordinal(), OreDictionaryUtil.getOreDic("ingotLead"), 1F);	//鉛の粉→鉛インゴット
+        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_masses, ItemMass.Mass.LEAD.ordinal(), OreDictionaryUtil.getOreDicItemStack("ingotLead"), 1F);	//鉛の塊→鉛インゴット
+        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.LEAD.ordinal(), OreDictionaryUtil.getOreDicItemStack("ingotLead"), 1F);	//鉛の粉→鉛インゴット
 
         //ニッケルインゴット
-        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_masses, ItemMass.Mass.NICKEL.ordinal(), OreDictionaryUtil.getOreDic("ingotNickel"), 1F);	//ニッケルの塊→ニッケルインゴット
-        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.NICKEL.ordinal(), OreDictionaryUtil.getOreDic("ingotNickel"), 1F);	//ニッケルの粉→ニッケルインゴット
+        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_masses, ItemMass.Mass.NICKEL.ordinal(), OreDictionaryUtil.getOreDicItemStack("ingotNickel"), 1F);	//ニッケルの塊→ニッケルインゴット
+        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.NICKEL.ordinal(), OreDictionaryUtil.getOreDicItemStack("ingotNickel"), 1F);	//ニッケルの粉→ニッケルインゴット
 
         //銀インゴット
-        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_masses, ItemMass.Mass.SILVER.ordinal(), OreDictionaryUtil.getOreDic("ingotSilver"), 1F);	//銀の塊→銀インゴット
+        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_masses, ItemMass.Mass.SILVER.ordinal(), OreDictionaryUtil.getOreDicItemStack("ingotSilver"), 1F);	//銀の塊→銀インゴット
         //銀の粉→銀インゴット
-        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.SILVER.ordinal(), OreDictionaryUtil.getOreDic("ingotSilver"), 1F);
+        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.SILVER.ordinal(), OreDictionaryUtil.getOreDicItemStack("ingotSilver"), 1F);
 
         //クロムインゴット
         //クロムの塊→クロムインゴット
-        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_masses, ItemMass.Mass.CHROME.ordinal(), OreDictionaryUtil.getOreDic("ingotChrome"), 1F);
+        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_masses, ItemMass.Mass.CHROME.ordinal(), OreDictionaryUtil.getOreDicItemStack("ingotChrome"), 1F);
         //クロムの粉→クロムインゴット
-        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.CHORME.ordinal(), OreDictionaryUtil.getOreDic("ingotChrome"), 1F);
+        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.CHORME.ordinal(), OreDictionaryUtil.getOreDicItemStack("ingotChrome"), 1F);
 
         //タングステンインゴット
-        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_masses, ItemMass.Mass.TUNGSTEN.ordinal(), OreDictionaryUtil.getOreDic("ingotTungsten"), 1F);//タングステンの塊→タングステンインゴット
-        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.TUNGSTEN.ordinal(), OreDictionaryUtil.getOreDic("ingotTungsten"), 1F);	//タングステンの粉→タングステンインゴット
+        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_masses, ItemMass.Mass.TUNGSTEN.ordinal(), OreDictionaryUtil.getOreDicItemStack("ingotTungsten"), 1F);//タングステンの塊→タングステンインゴット
+        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.TUNGSTEN.ordinal(), OreDictionaryUtil.getOreDicItemStack("ingotTungsten"), 1F);	//タングステンの粉→タングステンインゴット
 
         //イリジウムインゴット
         //イリジウムの塊→イリジウムインゴット
-        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_masses, ItemMass.Mass.IRIDIUM.ordinal(), OreDictionaryUtil.getOreDic("ingotIridium"), 1F);
+        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_masses, ItemMass.Mass.IRIDIUM.ordinal(), OreDictionaryUtil.getOreDicItemStack("ingotIridium"), 1F);
         //イリジウムの粉→イリジウムインゴット
-        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.IRIDIUM.ordinal(), OreDictionaryUtil.getOreDic("ingotIridium"), 1F);
+        FurnaceRecipes.smelting().addSmelting(ConfigurationManager.ID_dusts, ItemDust.Dusts.IRIDIUM.ordinal(), OreDictionaryUtil.getOreDicItemStack("ingotIridium"), 1F);
     }
 
     public static void ingotRecipe()
     {
-        GameRegistry.addRecipe(new ShapelessOreRecipe(OreDictionaryUtil.getOreDic("ingotBronze",2),
+        GameRegistry.addRecipe(new ShapelessOreRecipe(OreDictionaryUtil.getOreDicItemStack("ingotBronze", 2),
                 "ingotCopper","ingotCopper","ingotCopper","ingotTin"
                 ));
 
-        GameRegistry.addRecipe(new ShapelessOreRecipe(OreDictionaryUtil.getOreDic("ingotBronze",2),
+        GameRegistry.addRecipe(new ShapelessOreRecipe(OreDictionaryUtil.getOreDicItemStack("ingotBronze", 2),
                 "ingotCopper","ingotCopper","ingotCopper","ingotTin"
         ));
     }

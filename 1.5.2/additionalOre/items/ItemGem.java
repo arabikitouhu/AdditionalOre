@@ -4,6 +4,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mods.additionalOre.AdditionalOre;
 import mods.japanAPI.JapanAPI;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -35,6 +36,16 @@ public class ItemGem extends AO_Item
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IconRegister iconRegister)
+    {
+        for(Gems G :Gems.VAILD_ARGS)
+        {
+            G.loadTexture(iconRegister);
+        }
+    }
+
+    @Override
 	@SideOnly(Side.CLIENT)
 	public Icon getIconFromDamage(int meta)
     {
@@ -50,16 +61,6 @@ public class ItemGem extends AO_Item
 
     @Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister iconRegister)
-    {
-		for(Gems G :Gems.VAILD_ARGS)
-        {
-            G.loadTexture(iconRegister);
-        }
-	}
-
-    @Override
-	@SideOnly(Side.CLIENT)
 	public void getSubItems(int id, CreativeTabs creativeTabs, List list)
     {
 		for (Gems G:Gems.VAILD_ARGS)
@@ -68,10 +69,11 @@ public class ItemGem extends AO_Item
 		}
 	}
 
-    private enum Gems
+    public enum Gems
     {
         RUBY("Ruby","紅玉"),
         SAPPHIRE("Sapphire","碧玉"),
+        GREEN_SAPPHIRE("GreenSapphire","緑碧玉"),
 
         ;
         public String unlocalizedName;
@@ -87,6 +89,17 @@ public class ItemGem extends AO_Item
             this.unlocalizedName = unlocalizedName;
             this.jpName = jpName;
         }
+
+        public ItemStack getItemStack( )
+        {
+            return getItemStack(1);
+        }
+
+        public ItemStack getItemStack(int amount)
+        {
+            return new ItemStack(AdditionalOre.ITEM_gems,amount,meta);
+        }
+
 
         public void loadTexture(IconRegister iconRegister)
         {

@@ -81,6 +81,7 @@ public class ItemDust extends AO_Item
         COPPER("Copper","銅","Copper"),
         TIN("Tin","錫","Tin"),
         URANIUM("Uranium","ウラニウム","Uranium"),
+        BAUXITE("Bauxite","ボーキサイト","Bauxite"),
         ALUMINUM("Aluminium","アルミニウム","Aluminum"),
         BRONZE("Bronze","青銅","Bronze"),
         STEEL("Steel","鋼鉄","Steel"),

@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +39,9 @@ public class OreBlock extends Block
         GameRegistry.registerBlock(this,ItemBlock_Ore.class,"OreBlock");
         for(Enum_ores O: Enum_ores.VALID_ARGS)
         {
-            LanguageRegistry.addName(new ItemStack(this,1,O.meta),O.unlocalizedName);
-            LanguageRegistry.instance().addNameForObject(new ItemStack(this,1,O.meta),"ja_JP",O.jpNames + "鉱石");
+            LanguageRegistry.addName(new ItemStack(this,1,O.meta),O.unlocalizedName + "ore");
+            LanguageRegistry.instance().addNameForObject(new ItemStack(this, 1, O.meta), "ja_JP", O.jpNames + "鉱石");
+            OreDictionary.registerOre("ore" + O.unlocalizedName,new ItemStack(this, 1, O.meta));
             JapanAPI.EVENT_entityItemPickupEventHook.addCoercedList("ore" + O.unlocalizedName, new ItemStack(this,1,O.meta));
         }
     }
@@ -47,7 +49,7 @@ public class OreBlock extends Block
 
     public String getUnlocalizedName(ItemStack itemStack)
     {
-        return Enum_ores.VALID_ARGS[itemStack.getItemDamage()].unlocalizedName;
+        return "additionalOre:" + Enum_ores.VALID_ARGS[itemStack.getItemDamage()].unlocalizedName + " Ore";
     }
 
 	@SideOnly(Side.CLIENT)

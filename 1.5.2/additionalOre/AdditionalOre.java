@@ -26,9 +26,7 @@ import mods.japanAPI.items.JAPI_ItemCrafingTool;
 import mods.japanAPI.utils.OreDictionaryUtil;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.EnumToolMaterial;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.gen.feature.WorldGenMinable;
@@ -70,6 +68,11 @@ public class AdditionalOre
     public static Item[] ITEM_hammer = new Item[ConfigurationManager.ID_Hammer.length];
 	public static Item[] ITEM_pickaxes = new Item[ConfigurationManager.ID_pickaxes.length];
     public static Item[] ITEM_sickel = new Item[ConfigurationManager.ID_Sickel.length];
+    public static Item[] ITEM_axe = new Item[ConfigurationManager.ID_Axe.length];
+    public static Item[] ITEM_hoe = new Item[12];
+    public static Item[] ITEM_shovel = new Item[ConfigurationManager.ID_Shovel.length];
+    public static Item[] ITEM_sword = new Item[12];
+    public static Item[] ITEM_paxel = new Item[ConfigurationManager.ID_Paxel.length];
 
 	public static EnumToolMaterial ENUM_gemTool;
 	public static EnumToolMaterial ENUM_emeraldTool;
@@ -79,7 +82,9 @@ public class AdditionalOre
 		ENUM_emeraldTool = EnumHelper.addToolMaterial("エメラルドツール", 3, 3122, 16F, 3, 20);
 	}
 
-	@Mod.PreInit
+
+
+    @Mod.PreInit
  	public void preInit(FMLPreInitializationEvent event)
     {
         //既存レシピの変更（不一致の削除）
@@ -105,70 +110,65 @@ public class AdditionalOre
 		initItem_Ingot();
         //追加アイテム（ナゲット）
 		initItem_Nugget();
+        //追加アイテム（宝石）
+        initItem_Gem();
 
 		initVanillaBlock();		//バニラ鉱石ブロックの初期化＆レジスタ登録処理
+
 		initBlock_Ore();		//追加ブロック（鉱石）
 
 		initCrackBlock();	//岩の裂け目
 
-        //石英鉱石
+
         if(ConfigurationManager.GenQuartz)
-        {
-		    GENERATOR_world.addGenMinable_Overworld(new WorldGenMinable(ConfigurationManager.ID_blockOre, Enum_ores.QUARTZ.meta, 6), 13, 31, 60);
-        }
+            GENERATOR_world.addGenMinable_Overworld(new WorldGenMinable(ConfigurationManager.ID_blockOre, Enum_ores.QUARTZ.meta, 6,Block.stone.blockID), 13, 31, 60);
+
 
         //銅鉱石
         if(ConfigurationManager.GenCopper)
-        {
-		    GENERATOR_world.addGenMinable_Overworld(new WorldGenMinable(ConfigurationManager.ID_blockOre, Enum_ores.COPPER.meta, 6), 10, 70, 50);
-        }
+		    GENERATOR_world.addGenMinable_Overworld(new WorldGenMinable(ConfigurationManager.ID_blockOre, Enum_ores.COPPER.meta, 6,Block.stone.blockID), 10, 70, 50);
+
 
         //錫鉱石
         if(ConfigurationManager.GenTin)
-        {
-		    GENERATOR_world.addGenMinable_Overworld(new WorldGenMinable(ConfigurationManager.ID_blockOre, Enum_ores.TIN.meta, 6), 1, 40, 50);
-        }
+		    GENERATOR_world.addGenMinable_Overworld(new WorldGenMinable(ConfigurationManager.ID_blockOre, Enum_ores.TIN.meta, 6,Block.stone.blockID), 1, 40, 50);
 
         //ウラニウム鉱石
         if(ConfigurationManager.GenUranium)
-		GENERATOR_world.addGenMinable_Overworld(new WorldGenMinable(ConfigurationManager.ID_blockOre,Enum_ores.URANIUM.meta, 3), 1, 63, 40);
+		GENERATOR_world.addGenMinable_Overworld(new WorldGenMinable(ConfigurationManager.ID_blockOre,Enum_ores.URANIUM.meta, 3,Block.stone.blockID), 1, 63, 40);
 
         //ボーキサイト鉱石
         if(ConfigurationManager.GenBauxite)
-        {
-		    GENERATOR_world.addGenMinable_Overworld(new WorldGenMinable(ConfigurationManager.ID_blockOre,Enum_ores.BAUXITE.meta, 8), 20, 75, 70);
-        }
+		    GENERATOR_world.addGenMinable_Overworld(new WorldGenMinable(ConfigurationManager.ID_blockOre,Enum_ores.BAUXITE.meta, 8,Block.stone.blockID), 20, 75, 70);
+
 
         //鉛鉱石
         if(ConfigurationManager.GenLead)
-        {
-		    GENERATOR_world.addGenMinable_Overworld(new WorldGenMinable(ConfigurationManager.ID_blockOre,Enum_ores.LEAD.meta, 4), 10, 35, 50);
-        }
+		    GENERATOR_world.addGenMinable_Overworld(new WorldGenMinable(ConfigurationManager.ID_blockOre,Enum_ores.LEAD.meta, 4,Block.stone.blockID), 10, 35, 50);
+
         //ニッケル鉱石
         if(ConfigurationManager.GenNickel)
-        {
-		    GENERATOR_world.addGenMinable_Overworld(new WorldGenMinable(ConfigurationManager.ID_blockOre,Enum_ores.NICKEL.meta, 4), 10, 32, 50);
-        }
+		    GENERATOR_world.addGenMinable_Overworld(new WorldGenMinable(ConfigurationManager.ID_blockOre,Enum_ores.NICKEL.meta, 4,Block.stone.blockID), 10, 32, 50);
+
         //銀鉱石
         if(ConfigurationManager.GenSilver)
-        {
-		    GENERATOR_world.addGenMinable_Overworld(new WorldGenMinable(ConfigurationManager.ID_blockOre,Enum_ores.SILVER.meta, 4), 5, 30, 40);
-        }
+		  GENERATOR_world.addGenMinable_Overworld(new WorldGenMinable(ConfigurationManager.ID_blockOre,Enum_ores.SILVER.meta, 4,Block.stone.blockID), 5, 30, 40);
+
+
 
 
         //岩の裂け目
-        if(ConfigurationManager.GenQuartz)
-        {
+        if(ConfigurationManager.GenCrackStone)
 		    GENERATOR_world.addGenMinable_Overworld(new WorldGenMinable(ConfigurationManager.ID_CrackBlock, 3), 1, 50, 30);
-        }
+
 
 
 		GameRegistry.registerWorldGenerator(new WorldGenerator());	//鉱石生成の設定
 
-		initItem_Gem();		//追加アイテム（宝石）
 
-		JAPI_ForgeEnumMaterials.ENUM_gemTool.customCraftingMaterial = ITEM_gems;
-        JAPI_ForgeEnumMaterials.ENUM_emeraldTool.customCraftingMaterial = Item.emerald;
+
+		JAPI_ForgeEnumMaterials.TOOL_GEMS.customCraftingMaterial = ITEM_gems;
+        JAPI_ForgeEnumMaterials.TOOL_EMERALD.customCraftingMaterial = Item.emerald;
 
 		initItem_Tools();
 
@@ -295,7 +295,7 @@ public class AdditionalOre
 
             if(Items[i] == "Emerald")
             {
-                GameRegistry.addRecipe(new ShapelessOreRecipe(OreDictionaryUtil.getOreDic("nugget" + Items[i],9),Item.emerald));
+                GameRegistry.addRecipe(new ShapelessOreRecipe(OreDictionaryUtil.getOreDicItemStack("nugget" + Items[i], 9),Item.emerald));
                 GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Item.emerald,1),
                         "XXX","XXX","XXX",
                         'X',"nugget" + Items[i]));
@@ -303,15 +303,15 @@ public class AdditionalOre
 
             }else if(Items[i] == "Diamond")
             {
-                GameRegistry.addRecipe(new ShapelessOreRecipe(OreDictionaryUtil.getOreDic("nugget"+ Items[i],9),Item.diamond));
+                GameRegistry.addRecipe(new ShapelessOreRecipe(OreDictionaryUtil.getOreDicItemStack("nugget" + Items[i], 9),Item.diamond));
                 GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Item.diamond,1),
                         "XXX","XXX","XXX",
                         'X',"nugget" + Items[i]));
 
             }else
             {
-                GameRegistry.addRecipe(new ShapelessOreRecipe(OreDictionaryUtil.getOreDic("nugget" + Items[i],9),"ingot" + Items[i]));
-                GameRegistry.addRecipe(new ShapedOreRecipe(OreDictionaryUtil.getOreDic("ingot" + Items[i]),
+                GameRegistry.addRecipe(new ShapelessOreRecipe(OreDictionaryUtil.getOreDicItemStack("nugget" + Items[i], 9),"ingot" + Items[i]));
+                GameRegistry.addRecipe(new ShapedOreRecipe(OreDictionaryUtil.getOreDicItemStack("ingot" + Items[i]),
                         "XXX", "XXX", "XXX",
                         'X', "nugget" + Items[i]));
             }
@@ -341,23 +341,51 @@ public class AdditionalOre
     //******************************************************************************************************************
 	private void initItem_Tools()
     {
-		ITEM_pickaxes[0] = new AO_ItemPickaxe(ConfigurationManager.ID_pickaxes[0], AO_ItemPickaxe.Pickaxes.Copper).setCreativeTab(TABS_tool);
-		ITEM_pickaxes[1] = new AO_ItemPickaxe(ConfigurationManager.ID_pickaxes[1], AO_ItemPickaxe.Pickaxes.Bronze).setCreativeTab(TABS_tool);
-		ITEM_pickaxes[2] = new AO_ItemPickaxe(ConfigurationManager.ID_pickaxes[2], AO_ItemPickaxe.Pickaxes.Steel).setCreativeTab(TABS_tool);
-		ITEM_pickaxes[3] = new AO_ItemPickaxe(ConfigurationManager.ID_pickaxes[3], AO_ItemPickaxe.Pickaxes.Titanium).setCreativeTab(TABS_tool);
-		ITEM_pickaxes[4] = new AO_ItemPickaxe(ConfigurationManager.ID_pickaxes[4], AO_ItemPickaxe.Pickaxes.Chrome).setCreativeTab(TABS_tool);
-		ITEM_pickaxes[5] = new AO_ItemPickaxe(ConfigurationManager.ID_pickaxes[5], AO_ItemPickaxe.Pickaxes.Tungsten).setCreativeTab(TABS_tool);
-		ITEM_pickaxes[6] = new AO_ItemPickaxe(ConfigurationManager.ID_pickaxes[6], AO_ItemPickaxe.Pickaxes.Ruby).setCreativeTab(TABS_tool);
-		ITEM_pickaxes[7] = new AO_ItemPickaxe(ConfigurationManager.ID_pickaxes[7], AO_ItemPickaxe.Pickaxes.Sapphire).setCreativeTab(TABS_tool);
-		ITEM_pickaxes[8] = new AO_ItemPickaxe(ConfigurationManager.ID_pickaxes[8], AO_ItemPickaxe.Pickaxes.Emerald).setCreativeTab(TABS_tool);
+		ITEM_pickaxes[0] = new AO_ItemPickaxe(ConfigurationManager.ID_pickaxes[0], AO_ItemTools.tools.Copper).setCreativeTab(TABS_tool);
+		ITEM_pickaxes[1] = new AO_ItemPickaxe(ConfigurationManager.ID_pickaxes[1], AO_ItemTools.tools.Bronze).setCreativeTab(TABS_tool);
+		ITEM_pickaxes[2] = new AO_ItemPickaxe(ConfigurationManager.ID_pickaxes[2], AO_ItemTools.tools.Steel).setCreativeTab(TABS_tool);
+		ITEM_pickaxes[3] = new AO_ItemPickaxe(ConfigurationManager.ID_pickaxes[3], AO_ItemTools.tools.Titanium).setCreativeTab(TABS_tool);
+		ITEM_pickaxes[4] = new AO_ItemPickaxe(ConfigurationManager.ID_pickaxes[4], AO_ItemTools.tools.Chrome).setCreativeTab(TABS_tool);
+		ITEM_pickaxes[5] = new AO_ItemPickaxe(ConfigurationManager.ID_pickaxes[5], AO_ItemTools.tools.Tungsten).setCreativeTab(TABS_tool);
+		ITEM_pickaxes[6] = new AO_ItemPickaxe(ConfigurationManager.ID_pickaxes[6], AO_ItemTools.tools.Ruby).setCreativeTab(TABS_tool);
+		ITEM_pickaxes[7] = new AO_ItemPickaxe(ConfigurationManager.ID_pickaxes[7], AO_ItemTools.tools.Sapphire).setCreativeTab(TABS_tool);
+		ITEM_pickaxes[8] = new AO_ItemPickaxe(ConfigurationManager.ID_pickaxes[8], AO_ItemTools.tools.Emerald).setCreativeTab(TABS_tool);
 
         ITEM_hammer[0] = new AO_ItemCraftingTool(ConfigurationManager.ID_Hammer[0], JAPI_ItemCrafingTool.Types.Wood,0).setCreativeTab(TABS_tool);
         ITEM_hammer[1] = new AO_ItemCraftingTool(ConfigurationManager.ID_Hammer[1], JAPI_ItemCrafingTool.Types.Stone,0).setCreativeTab(TABS_tool);
+        ITEM_hammer[2] = new AO_ItemCraftingTool(ConfigurationManager.ID_Hammer[2], JAPI_ItemCrafingTool.Types.Copper,0).setCreativeTab(TABS_tool);
+        ITEM_hammer[3] = new AO_ItemCraftingTool(ConfigurationManager.ID_Hammer[3], JAPI_ItemCrafingTool.Types.Iron,0).setCreativeTab(TABS_tool);
+        ITEM_hammer[4] = new AO_ItemCraftingTool(ConfigurationManager.ID_Hammer[4], JAPI_ItemCrafingTool.Types.Bronze,0).setCreativeTab(TABS_tool);
+        ITEM_hammer[5] = new AO_ItemCraftingTool(ConfigurationManager.ID_Hammer[5], JAPI_ItemCrafingTool.Types.Steel,0).setCreativeTab(TABS_tool);
+        ITEM_hammer[6] = new AO_ItemCraftingTool(ConfigurationManager.ID_Hammer[6], JAPI_ItemCrafingTool.Types.TungstenSteel,0).setCreativeTab(TABS_tool);
+        ITEM_hammer[7] = new AO_ItemCraftingTool(ConfigurationManager.ID_Hammer[7], JAPI_ItemCrafingTool.Types.Titanium,0).setCreativeTab(TABS_tool);
 
         ITEM_sickel[0] = new AO_Sickel(ConfigurationManager.ID_Sickel[0],EnumToolMaterial.WOOD,"Wood").setCreativeTab(TABS_tool);
 
-        ModRecipe.PickaxeRecipe();
-        ModRecipe.HammerRecipe();
+        ITEM_axe[0] = new AO_ItemAxe(ConfigurationManager.ID_Axe[0], AO_ItemTools.tools.Copper).setCreativeTab(TABS_tool);
+        ITEM_axe[1] = new AO_ItemAxe(ConfigurationManager.ID_Axe[1],AO_ItemTools.tools.Bronze).setCreativeTab(TABS_tool);
+        ITEM_axe[2] = new AO_ItemAxe(ConfigurationManager.ID_Axe[2],AO_ItemTools.tools.Steel).setCreativeTab(TABS_tool);
+
+        ITEM_shovel[0] = new AO_ItemShovel(ConfigurationManager.ID_Shovel[0],AO_ItemTools.tools.Copper).setCreativeTab(TABS_tool);
+
+        ITEM_shovel[1] = new AO_ItemShovel(ConfigurationManager.ID_Shovel[1],AO_ItemTools.tools.Bronze).setCreativeTab(TABS_tool);
+
+        ITEM_shovel[2] = new AO_ItemShovel(ConfigurationManager.ID_Shovel[2],AO_ItemTools.tools.Steel).setCreativeTab(TABS_tool);
+
+        ITEM_paxel[0] = new AO_ItemPaxel(ConfigurationManager.ID_Paxel[0],JAPI_ForgeEnumMaterials.PAXEL_WOODS,"Wood");
+
+        ITEM_paxel[1] = new AO_ItemPaxel(ConfigurationManager.ID_Paxel[1],JAPI_ForgeEnumMaterials.PAXEL_STONE,"Stone");
+
+        ITEM_paxel[2] = new AO_ItemPaxel(ConfigurationManager.ID_Paxel[2],JAPI_ForgeEnumMaterials.PAXEL_COPPER,"Copper");
+
+        ITEM_paxel[3] = new AO_ItemPaxel(ConfigurationManager.ID_Paxel[3],JAPI_ForgeEnumMaterials.PAXEL_IRON,"Iron");
+
+        ITEM_paxel[4] = new AO_ItemPaxel(ConfigurationManager.ID_Paxel[4],JAPI_ForgeEnumMaterials.PAXEL_COPPER,"Bronze");
+
+        ITEM_paxel[5] = new AO_ItemPaxel(ConfigurationManager.ID_Paxel[5],JAPI_ForgeEnumMaterials.PAXEL_STEEL,"Steel");
+
+
+        ModRecipe.craftingInitilization();
 
 	}
 

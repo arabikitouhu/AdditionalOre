@@ -2,7 +2,9 @@ package mods.additionalOre.blocks;
 
 
 import mods.additionalOre.AdditionalOre;
+import mods.additionalOre.items.ItemGem;
 import mods.additionalOre.items.ItemMass;
+import mods.japanAPI.utils.OreDictionaryUtil;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
@@ -17,6 +19,9 @@ public enum Enum_ores
     LEAD("Lead","鉛",ItemMass.Mass.LEAD.getItemStack(),1,3,1,10),
     NICKEL("Nickel","ニッケル",ItemMass.Mass.NICKEL.getItemStack(),1,3,1,10),
     SILVER("Silver","銀",ItemMass.Mass.SILVER.getItemStack(),1,3,1,10),
+    RUBY("Ruby","紅玉", ItemGem.Gems.RUBY.getItemStack(),1,4,1,10),
+    SAPPHIRE("Sapphire","碧玉",OreDictionaryUtil.getOreDicItemStack("gemSapphire"),1,4,1,10),
+    GREEN_SAPPHIRE("GreenSapphire","緑碧玉",OreDictionaryUtil.getOreDicItemStack("gemGreenSapphire"),1,4,1,10),
 
     ;
 

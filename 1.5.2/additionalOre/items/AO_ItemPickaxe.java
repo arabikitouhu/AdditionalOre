@@ -4,23 +4,27 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import mods.japanAPI.JapanAPI;
-import mods.japanAPI.items.JAPI_ForgeEnumMaterials;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumToolMaterial;
-import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.List;
 
-public class AO_ItemPickaxe extends ItemPickaxe
+public class AO_ItemPickaxe extends AO_ItemTools
 {
-    private Pickaxes pickaxe;
+    private tools pickaxe;
 
-    public AO_ItemPickaxe(int itemID,Pickaxes pickaxe)
+    /** an array of the blocks this pickaxe is effective against */
+    public static final Block[] blocksEffectiveAgainst = new Block[] {Block.cobblestone, Block.stoneDoubleSlab, Block.stoneSingleSlab, Block.stone, Block.sandStone, Block.cobblestoneMossy, Block.oreIron, Block.blockIron, Block.oreCoal, Block.blockGold, Block.oreGold, Block.oreDiamond, Block.blockDiamond, Block.ice, Block.netherrack, Block.oreLapis, Block.blockLapis, Block.oreRedstone, Block.oreRedstoneGlowing, Block.rail, Block.railDetector, Block.railPowered, Block.railActivator};
+
+    public AO_ItemPickaxe(int itemID,tools pickaxe)
     {
-        super(itemID, pickaxe.material);
+        super(itemID, 1, pickaxe.material, blocksEffectiveAgainst);
         this.pickaxe = pickaxe;
+        MinecraftForge.setToolClass(this,"pickaxe",toolMaterial.getHarvestLevel());
         register();
     }
 
@@ -34,39 +38,27 @@ public class AO_ItemPickaxe extends ItemPickaxe
 
     }
 
+    /**
+     * Returns if the item (tool) can harvest results from the block type.
+     */
+    public boolean canHarvestBlock(Block block)
+    {
+        return block == Block.obsidian ? this.toolMaterial.getHarvestLevel() == 3 : (block != Block.blockDiamond && block != Block.oreDiamond ? (block != Block.oreEmerald && block != Block.blockEmerald ? (block != Block.blockGold && block != Block.oreGold ? (block != Block.blockIron && block != Block.oreIron ? (block != Block.blockLapis && block != Block.oreLapis ? (block != Block.oreRedstone && block != Block.oreRedstoneGlowing ? (block.blockMaterial == Material.rock ? true : (block.blockMaterial == Material.iron ? true : block.blockMaterial == Material.anvil)) : this.toolMaterial.getHarvestLevel() >= 2) : this.toolMaterial.getHarvestLevel() >= 1) : this.toolMaterial.getHarvestLevel() >= 1) : this.toolMaterial.getHarvestLevel() >= 2) : this.toolMaterial.getHarvestLevel() >= 2) : this.toolMaterial.getHarvestLevel() >= 2);
+    }
+
+    /**
+     * Returns the strength of the stack against a given block. 1.0F base, (Quality+1)*2 if correct blocktype, 1.5F if
+     * sword
+     */
+    public float getStrVsBlock(ItemStack itemStack, Block block)
+    {
+        return block != null && (block.blockMaterial == Material.iron || block.blockMaterial == Material.anvil || block.blockMaterial == Material.rock) ? this.efficiencyOnProperMaterial : super.getStrVsBlock(itemStack, block);
+    }
+
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack itemStack, EntityPlayer par2EntityPlayer, List list, boolean par4)
     {
         list.add((getMaxDamage(itemStack) - this.getDisplayDamage(itemStack)) + "/" + this.getMaxDamage(itemStack));
     }
-
-    public enum Pickaxes
-    {
-        Copper(JAPI_ForgeEnumMaterials.TOOL_COPPER,"Cooper","銅"),
-        Bronze(JAPI_ForgeEnumMaterials.TOOL_BRONZE,"Bronze","青銅"),
-        Steel(JAPI_ForgeEnumMaterials.TOOL_STEEL,"Steel","鋼鉄"),
-        Titanium(JAPI_ForgeEnumMaterials.TOOL_TUNGSTEN,"Titanium","チタニウム"),
-        Chrome(JAPI_ForgeEnumMaterials.TOOL_CHROME,"Chrome","クロム"),
-        Tungsten(JAPI_ForgeEnumMaterials.TOOL_TUNGSTEN,"Tungsten","タングステン"),
-        Ruby(JAPI_ForgeEnumMaterials.ENUM_gemTool,"Ruby","紅玉"),
-        Sapphire(JAPI_ForgeEnumMaterials.ENUM_gemTool,"Sapphire","碧玉"),
-        Green_Sapphire(JAPI_ForgeEnumMaterials.ENUM_gemTool,"GreenSapphire","緑碧玉"),
-        Emerald(JAPI_ForgeEnumMaterials.ENUM_emeraldTool,"Emerald","翡翠")
-        ;
-
-        ;
-        public EnumToolMaterial material;
-        public String unlocalizedName;
-        public String jpName;
-
-        private Pickaxes(EnumToolMaterial material,String unlocalizedName,String jpName)
-        {
-            this.unlocalizedName = unlocalizedName;
-            this.material = material;
-            this.jpName = jpName;
-        }
-
-    }
-
 }

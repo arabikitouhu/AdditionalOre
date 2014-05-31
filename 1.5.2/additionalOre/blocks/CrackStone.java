@@ -57,12 +57,12 @@ public class CrackStone extends Block {
 			if(JapanAPI.RANDOM.nextInt(101) % 100 < 20 + 3 * fortune)
             {
                 //銀(20%)
-                ret.add(OreDictionaryUtil.getOreDic("massSilver", JapanAPI.RANDOM.nextInt(fortune * 2 + 1)));
+                ret.add(OreDictionaryUtil.getOreDicItemStack("massSilver", JapanAPI.RANDOM.nextInt(fortune * 2 + 1)));
 			}
 			if(JapanAPI.RANDOM.nextInt(101) % 100 < 40 + 3 * fortune)
             {
                 //ニッケル(40%)
-				ret.add(OreDictionaryUtil.getOreDic("massNickel", JapanAPI.RANDOM.nextInt(fortune * 2 + 1)));
+				ret.add(OreDictionaryUtil.getOreDicItemStack("massNickel", JapanAPI.RANDOM.nextInt(fortune * 2 + 1)));
 			}
 			if(JapanAPI.RANDOM.nextInt(101) % 100 < 5 + 2 * fortune)
             {
@@ -76,7 +76,7 @@ public class CrackStone extends Block {
         {
 			if(JapanAPI.RANDOM.nextInt(101) % 100 < 20 + 2 * fortune)
             {
-				ret.add(OreDictionaryUtil.getOreDic("massTitanium",JapanAPI.RANDOM.nextInt(fortune + 1)));	//チタニウム(20%)
+				ret.add(OreDictionaryUtil.getOreDicItemStack("massTitanium", JapanAPI.RANDOM.nextInt(fortune + 1)));	//チタニウム(20%)
 			}
 			if(JapanAPI.RANDOM.nextInt(101) % 100 < 20 + 2 * fortune)
             {
@@ -125,7 +125,7 @@ public class CrackStone extends Block {
 			}
 			if(JapanAPI.RANDOM.nextInt(101) % 100 < 3 + fortune)
             {
-				ret.add(OreDictionaryUtil.getOreDic("massIridium",JapanAPI.RANDOM.nextInt(fortune)));		//イリジウム(3%)
+				ret.add(OreDictionaryUtil.getOreDicItemStack("massIridium", JapanAPI.RANDOM.nextInt(fortune)));		//イリジウム(3%)
 			}
 
 		} else {	//最上層

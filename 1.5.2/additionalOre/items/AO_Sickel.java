@@ -12,10 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.world.World;
 
-/**
- * Created by Jack on 14/05/28.
- */
-public class AO_Sickel extends ItemTool
+public class AO_Sickel extends AO_ItemTools
 {
 
     int radiusCrops = 2;
@@ -26,7 +23,7 @@ public class AO_Sickel extends ItemTool
     {
         super(itemId, 2, enumToolMaterial, new Block[0]);
         setMaxStackSize(1);
-        this.name= name;
+        this.name = name;
         register();
     }
 
